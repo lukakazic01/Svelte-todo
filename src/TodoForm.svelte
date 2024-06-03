@@ -1,7 +1,6 @@
 <script>
     import { todos } from './stores/TodosStore.js'
     let todoTitle = ''
-
     const addTodo = () => {
         todos.update(todos => {
             const maxId = Math.max(...todos.reduce((acc, todo) => [...acc, todo.id], []))
