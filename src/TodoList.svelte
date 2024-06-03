@@ -1,19 +1,19 @@
 <script>
-    import { fly } from 'svelte/transition'
-    import {createEventDispatcher} from "svelte";
-    import TodoItem from "./TodoItem.svelte";
+  import {fly} from 'svelte/transition'
+  import TodoItem from "./TodoItem.svelte";
+  import {todos} from "./stores/TodosStore.js"
 
-    export let filteredTodos;
-    export let remainingTodos;
-    export let currentFilter;
-    export let remainingTodosText;
+  let currentFilter = 'all'
 
-    const emit = createEventDispatcher();
+    $: remainingTodos = $todos.filter((todo) => !todo.isComplete).length
+    $: remainingTodosText = remainingTodos === 1 ? 'item remaining' : 'items remaining';
+    $: filteredTodos = currentFilter === 'all' ? $todos : currentFilter === 'completed' ? $todos.filter((todo) => todo.isComplete) : $todos.filter((todo) => !todo.isComplete)
+
     const checkAllTodos = () => {
-        emit('checkAllTodos')
+      todos.update(allTodos =>  allTodos.map((todo) => ({...todo, isComplete: true})))
     }
     const clearCompleted = () => {
-        emit('clearCompleted')
+      todos.update(allTodos => allTodos.filter((todo) => !todo.isComplete))
     }
 </script>
 
@@ -34,19 +34,19 @@
   <div class="other-buttons-container">
     <div>
       <button
-        on:click={() => emit('applyFilter', 'all')}
+        on:click={() => currentFilter = 'all'}
         class="button filter-button"
         class:filter-button-active={currentFilter === 'all'}>
         All
       </button>
       <button
-        on:click={() => emit('applyFilter', 'active')}
+        on:click={() => currentFilter = 'active'}
         class="button filter-button"
         class:filter-button-active={currentFilter === 'active'}>
         Active
       </button>
       <button
-        on:click={() => emit('applyFilter', 'completed')}
+        on:click={() => currentFilter = 'completed'}
         class="button filter-button"
         class:filter-button-active={currentFilter === 'completed'}>
         Completed

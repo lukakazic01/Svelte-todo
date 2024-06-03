@@ -1,23 +1,28 @@
 <script>
     import { fade, fly } from 'svelte/transition'
-    import {createEventDispatcher} from "svelte";
+    import { todos } from './stores/TodosStore.js'
     export let todo;
+    let beforeTitleCache = ''
 
-    const emit = createEventDispatcher()
     const handleEdit = (todo) => {
-        emit('editTodo', { todo })
+      beforeTitleCache = todo.title
+      todos.update(allTodos => allTodos.map((t) => t.id === todo.id ? ({ ...t, isEditing: true }) : t))
     }
-
     const handleDoneEdit = (e, todo) => {
-        emit('doneEdit', { e, todo })
+      if(todo.title.trim().length === 0) todo.title = beforeTitleCache
+      if (e.key === 'Enter') leaveEditMode(todo)
+      if(e.key === 'Escape') {
+        todo.title = beforeTitleCache
+        leaveEditMode(todo)
+      }
     }
 
     const leaveEditMode = (todo) => {
-        emit('leaveEditMode', { todo })
+      todos.update(allTodos => allTodos.map((t) => t.id === todo.id ? ({ ...t, isEditing: false }) : t))
     }
 
     const deleteTodo = (id) => {
-        emit('deleteTodo', { id })
+        todos.update(allTodos => allTodos.filter((todo) => todo.id !== id))
     }
 </script>
 
