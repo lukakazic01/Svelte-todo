@@ -5,7 +5,7 @@
     const addTodo = () => {
         todos.update(todos => {
             const maxId = Math.max(...todos.reduce((acc, todo) => [...acc, todo.id], []))
-            const newTodo = {id: maxId + 1, title: todoTitle, isComplete: false, isEditing: false}
+            const newTodo = {id: maxId === -Infinity ? 0 : maxId + 1, title: todoTitle, isComplete: false, isEditing: false}
             todoTitle = ""
             return [...todos, newTodo];
         })

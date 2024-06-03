@@ -1,22 +1,13 @@
 import { writable } from "svelte/store";
 
-export const todos = writable([
-    {
-        id: 1,
-        title: 'Finish Svelte screencasttt',
-        isComplete: false,
-        isEditing: false,
-    },
-    {
-        id: 2,
-        title: 'Go shopping',
-        isComplete: false,
-        isEditing: false,
-    },
-    {
-        id: 3,
-        title: 'Take over world',
-        isComplete: false,
-        isEditing: false,
-    },
-])
+export const todos = writable([])
+
+export const getAllTodos = async () => {
+    try {
+        const response = await fetch('https://jsonplaceholder.typicode.com/users/1/todos')
+        const data = await response.json();
+        todos.set(data);
+    } catch (error) {
+        console.error('Error fetching todos:', error);
+    }
+}

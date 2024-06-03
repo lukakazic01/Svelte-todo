@@ -4,7 +4,12 @@
   import NoTodosContainer from "./NoTodosContainer.svelte";
   import TodoForm from "./TodoForm.svelte";
   import TodoList from "./TodoList.svelte";
-  import { todos } from "./stores/TodosStore.js"
+  import { todos, getAllTodos } from "./stores/TodosStore.js"
+  import {onMount} from "svelte";
+
+  onMount(async () => {
+    await getAllTodos()
+  });
 </script>
 
 <div class="todo-app-container">
